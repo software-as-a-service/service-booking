@@ -1,0 +1,49 @@
+<section>
+      VmInclude:__BASE__/vmiis/Common-Code/frame/excel_v2.html
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/frame/excel_v2.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //-------------------------------------
+        _fields="Client ID|UID,First_Name,Last_Name,Business_Name,Address,Suburb,Postcode,State,Telephone,Mobilephone";
+        _fields+=",Submit Date|DateTime,Submitted by|Author";
+        //-------------------------------------
+        $('#D__ID').on('load',function(){           _set_req(); _request_data();                               })
+        //-------------------------------------
+        _before_change=function(changes,source){
+            _process_postcode(changes,source,'Suburb',5,'Postcode',6,'State',7);
+        };
+        //-------------------------------------
+        _columns_process=function(columns){
+            //-------------------------------------
+            columns[5]={data:'Suburb',type: 'autocomplete',trimDropdown:false, source:function(query, process){
+                var req_data={cmd:'suburb',query:query,count:'10'}
+                $VmAPI.request({data:req_data,callback:function(res){
+                    process($.parseJSON(res.ret));
+                }})
+            }};
+            //-------------------------------------
+            columns[6]={data:'Postcode',type: 'autocomplete',trimDropdown:false, source:function(query, process){
+                var req_data={cmd:'postcode',query:query,count:'10'}
+                $VmAPI.request({data:req_data,callback:function(res){
+                    process($.parseJSON(res.ret));
+                }})
+            }};
+        }
+        //-------------------------------------
+        _before_submit=function(record,dbv){
+     		dbv.S1=record.Site;
+            return true;
+        };
+        //-------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/toolbar/toolbar_for_excel.css
+    #D__ID{
+        font-size:14px;
+        font-family: Helvetica, Arial, sans-serif;
+    }
+</style>
