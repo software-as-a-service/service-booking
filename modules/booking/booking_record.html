@@ -28,6 +28,11 @@
             //-------------------------------------
             columns[1]={data:'Date',width:120,type: 'date',format: 'DD/MM/YYYY',correctFormat:true};
             //-------------------------------------
+            columns[2]={data:'Time',width:110, renderer:function(instance, td, row, col, prop, value, cellProperties){
+        	    $(td).html("<input type=time value='"+value+"' style='border: 0px solid;' />");
+        	    $(td).find('input').on('change',function(){ $("#excel__ID").handsontable("setDataAtCell", row, col, this.value); });
+                return td;
+            }};
             columns[3]={data:'Hours',type: 'dropdown',source: [0,1,2,3,4,5,6,7,8,9],trimDropdown:false };
             columns[4]={data:'Minutes',type: 'dropdown',source: [0,5,10,15,20,25,30,35,40,45,50,55],trimDropdown:false };
             //-------------------------------------
@@ -60,6 +65,10 @@
                 $("#excel__ID").handsontable("setDataAtCell", 0, 4, 30);
             }
         };
+        //-------------------------------------
+        _new_pre_data_process=function(){
+            $("#excel__ID").handsontable("setDataAtCell", 0, 2, "08:00");
+        }
         //-------------------------------------
         _set_req=function(){
             //-------------------
