@@ -55,7 +55,7 @@
             return true;
         };
         //-------------------------------------
-        _records_process=function(records){
+        _data_process=function(records){
             if($vm.vm['__ID'].op.new!==undefined){
                 $vm.vm['__ID'].op.new=undefined;
                 $('#new__ID').triggerHandler('click');
@@ -68,10 +68,18 @@
         //-------------------------------------
         _new_pre_data_process=function(){
             $("#excel__ID").handsontable("setDataAtCell", 0, 2, "08:00");
+            $("#excel__ID").handsontable("setDataAtCell", 0, 5, "#008800");
+        }
+        //-------------------------------------
+        _after_submit_all=function(type,res){
+            if(type=='add'){
+                $vm.vm['__ID'].op.sql_where=" ID="+res.ret;
+            }
         }
         //-------------------------------------
         _set_req=function(){
             //-------------------
+            $('#new__ID').hide(); //always hide
             $('#multi__ID').show();
             if($vm.vm['__ID'].op.new!==undefined || $vm.vm['__ID'].op.sql_where!==undefined){
                 $('#multi__ID').hide();
@@ -81,9 +89,8 @@
             sql+="select Information,ID,UID,DateTime,Author,RowNum from tb where RowNum between @I6 and @I7";
             var sql_n="select count(ID) from [TABLE-"+_db_pid+"-@S1]";
             //-------------------
-            if($vm.vm['__ID'].op.sql_where!==undefined){
+            if($vm.vm['__ID'].op.sql_where!==""){
                 var sql_where=$vm.vm['__ID'].op.sql_where;
-                $vm.vm['__ID'].op.sql_where=undefined;
                 sql=sql.replace('RowNum between @I6 and @I7',sql_where);
                 sql_n+=" where "+sql_where;
             }
